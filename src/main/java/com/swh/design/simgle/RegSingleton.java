@@ -1,5 +1,6 @@
 package com.swh.design.simgle;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  *      这种实现单利模式  可以维护一组单利实例  spring中采用的就是这种模式
  *
  */
-public class RegSingleton {
+public class RegSingleton implements Serializable{
 
     private static Map<String,Object> singletonMap = new HashMap();
 
