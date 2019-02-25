@@ -1,37 +1,31 @@
 package com.swh.design.simgle;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+/**
+ *
+ *   这种方式可以防止单利被破坏
+ *
+ */
 
 public class ReflexSingleton {
 
-    private  static  volatile   ReflexSingleton reflexSingleton;
-    private static boolean flag = Boolean.FALSE;
+    private  static     ReflexSingleton reflexSingleton = new ReflexSingleton();
    private ReflexSingleton(){
-        throw new RuntimeException("sss");
+            if(reflexSingleton !=null)throw new RuntimeException("单利被破坏");
    }
 
-    public static   ReflexSingleton getInstance(){
-        if(reflexSingleton == null) {
-            synchronized (ReflexSingleton.class){
-                if(reflexSingleton == null) {
-                    reflexSingleton = new ReflexSingleton();
-                }
-            }
-        }
-        return reflexSingleton;
-    }
 
-    public static void main(String[] args) {
-        System.out.println(ReflexSingleton.getInstance() );
-        /*try {
-           // ReflexSingleton invoke = ReflexSingleton.class.newInstance();
-            System.out.println(ReflexSingleton.getInstance() );
+   public static ReflexSingleton getInstance(){
+       return reflexSingleton;
+   }
 
-        }*/  /*catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }  catch (InstantiationException e) {
-            e.printStackTrace();
-        }*/
+
+
+    public static void main(String[] args) throws IllegalAccessException, InstantiationException {
+       try {
+           ReflexSingleton reflexSingleton = ReflexSingleton.class.newInstance();
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+        ReflexSingleton instance = ReflexSingleton.getInstance();
     }
 }
