@@ -32,12 +32,9 @@ import java.io.*;
  *
  */
 public class SerializableSingleton implements Serializable{
-
     private  static  volatile   SerializableSingleton serializableSingleton;
-
     public SerializableSingleton() {
     }
-
     public static   SerializableSingleton getInstance(){
         if(serializableSingleton == null) {
             synchronized (SerializableSingleton.class){
@@ -48,13 +45,9 @@ public class SerializableSingleton implements Serializable{
         }
         return serializableSingleton;
     }
-
-
     private Object readResolve() {
         return serializableSingleton;
     }
-
-
     public static void main(String[] args) {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("serializable"));
@@ -68,13 +61,7 @@ public class SerializableSingleton implements Serializable{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
-
-
 }
 
 

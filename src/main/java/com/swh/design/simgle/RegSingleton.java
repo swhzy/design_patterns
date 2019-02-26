@@ -10,21 +10,14 @@ import java.util.Map;
  *
  */
 public class RegSingleton implements Serializable{
-
     private static Map<String,Object> singletonMap = new HashMap();
-
     static {
         singletonMap.put(RegSingleton.class.getName(),new RegSingleton());
     }
-
     protected RegSingleton(){}
-
     public static Object getInstance(String name){
-        if(name == null){
-            name = "RegSingleton";
-        }
+        if(name == null){ name = "RegSingleton"; }
         if(singletonMap.get(name)==null){
-
             try {
                 singletonMap.put(name, Class.forName(name).newInstance());
             } catch (InstantiationException e) {
@@ -33,12 +26,6 @@ public class RegSingleton implements Serializable{
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-            }
-
-        }
-
-        return singletonMap.get(name);
-
-    }
-
+            } }
+        return singletonMap.get(name); }
 }
