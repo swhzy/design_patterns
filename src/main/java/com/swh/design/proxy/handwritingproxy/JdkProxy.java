@@ -17,7 +17,7 @@ public class JdkProxy  implements MyselfInvocationHandler {
 
 
     public Object newProxy(){
-        return MyselfProxy.newProxyInstance(JdkProxy.class.getClassLoader(),person.getClass().getInterfaces(),this);
+        return MyselfProxy.newProxyInstance(new MyselfClassLoader(),person.getClass().getInterfaces(),this);
     }
 
     @Override
