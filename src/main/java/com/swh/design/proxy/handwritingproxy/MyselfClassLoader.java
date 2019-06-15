@@ -2,6 +2,9 @@ package com.swh.design.proxy.handwritingproxy;
 
 import java.io.*;
 
+/**
+ *  类加载器用于加载类文件
+ */
 public class MyselfClassLoader extends ClassLoader {
 
     private File classPathFile;
@@ -12,6 +15,12 @@ public class MyselfClassLoader extends ClassLoader {
 
     }
 
+    /**
+     *   这个方法获取编译好的动态代理.class文件 并加载到虚拟机中
+     * @param name
+     * @return
+     * @throws ClassNotFoundException
+     */
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         if (classPathFile == null) return null;
@@ -30,6 +39,7 @@ public class MyselfClassLoader extends ClassLoader {
                 while ((len = inIo.read(bytes)) != -1) {
                     out.write(bytes, 0, len);
                 }
+                // 把.class文件加载到虚拟机中，并返回Class对象
                 return defineClass(className, out.toByteArray(), 0, out.size());
             }
         } catch (FileNotFoundException e) {

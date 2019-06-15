@@ -20,11 +20,10 @@ public class MyselfProxy {
     public static Object newProxyInstance(MyselfClassLoader loader,
                                           Class<?>[] interfaces,
                                           MyselfInvocationHandler h) {
-
+        //手动生成动态代理类java文件的代码字符串
         String generateProxy = generateProxy(interfaces);
-
+        // 获取当前文件夹的路径
         String path = MyselfProxy.class.getResource("").getPath() + "Proxy$0.java";
-        String path1 = "E:\\design_patterns\\design_patterns\\src\\main\\java\\com\\swh\\design\\proxy\\handwritingproxy\\Proxy$0.java";
         FileWriter fileWriter = null;
         StandardJavaFileManager standardFileManager =  null;
         try {
@@ -32,11 +31,7 @@ public class MyselfProxy {
             fileWriter = new FileWriter(path);
             fileWriter.write(generateProxy);
             fileWriter.flush();
-            fileWriter.close();
-            FileWriter fileWriter1 = new FileWriter(path1);
-            fileWriter1.write(generateProxy);
-            fileWriter1.flush();
-            fileWriter1.close();
+
             // 编译java文件
             JavaCompiler systemJavaCompiler = ToolProvider.getSystemJavaCompiler();
             standardFileManager = systemJavaCompiler.getStandardFileManager(null, null, null);
@@ -49,7 +44,8 @@ public class MyselfProxy {
             //删除虚拟代理类
             File file = new File(path);
             file.delete();
-            return constructor.newInstance();
+            //  通过反射创建动态代理类
+            return constructor.newInstance(h);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,6 +70,7 @@ public class MyselfProxy {
         return null;
     }
 
+    // 生成动态代理类的java文件
     private static String generateProxy(Class<?>[] interfaces) {
 
         StringBuilder spliceProxy = new StringBuilder();
@@ -81,7 +78,7 @@ public class MyselfProxy {
         spliceProxy.append("package com.swh.design.proxy.handwritingproxy;" + WRAP + WRAP);
 
         spliceProxy.append("import java.lang.reflect.Method;"+WRAP);
-
+        // 实现目标类的接口是为了生成动态代理类后能够使用目标类来接收，并可以使用目标类来调用目标类的方法
         spliceProxy.append("public class Proxy$0 implements " + interfaces[0].getName() + " {" + WRAP);
         spliceProxy.append("private MyselfInvocationHandler h;" + WRAP);
         spliceProxy.append("public Proxy$0(MyselfInvocationHandler h){" + WRAP);
@@ -90,10 +87,11 @@ public class MyselfProxy {
 
         Method[] methods = interfaces[0].getMethods();
 
-        for (Method method : methods) {
+        for (Method method : methods) { // 循环处理目标类的中方法 进行代理，并实现接口中的方法进行重写
             spliceProxy.append("public " + method.getReturnType().getName() + " " + method.getName() + "(){" + WRAP);
             spliceProxy.append("try{"+WRAP);
             spliceProxy.append("Method m=" + interfaces[0].getName() + ".class.getMethod(\"" + method.getName() + "\",new Class[]{});" + WRAP);
+            // 调用JdkProxy类的invoke 方法 ，invoke方法加上额外功能后调用目标类的方法
             spliceProxy.append("this.h.invoke(this,m,null);" + WRAP);
             spliceProxy.append("}catch (Throwable e) {"+WRAP);
             spliceProxy.append("e.printStackTrace();"+WRAP);
